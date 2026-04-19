@@ -921,17 +921,29 @@ subCategorySelect.addEventListener('change', function() {
     const selectedMainCategory = mainCategorySelect.value;
     const selectedSubCategory = this.value;
 
+    console.log("=== FILTRADO ===");
+    console.log("Categoría seleccionada:", selectedMainCategory);
+    console.log("Subcategoría seleccionada:", selectedSubCategory);
+    console.log("Total documentos en array:", allDocuments.length);
+
     if (!selectedMainCategory || !selectedSubCategory) {
+        console.log("Falta seleccionar categoría o subcategoría");
         resultsContainer.innerHTML = '';
         noResults.style.display = 'block';
         return;
     }
 
     const categoryCode = categoryMap[selectedMainCategory];
-    const filtered = allDocuments.filter(doc =>
-        doc['Categoria'] === categoryCode &&
-        doc['Subcategoria'] === selectedSubCategory
-    );
+    console.log("Código de categoría mapeado:", categoryCode);
+    console.log("Primeros 3 docs para referencia:", allDocuments.slice(0, 3));
+
+    const filtered = allDocuments.filter(doc => {
+        const match = doc['Categoria'] === categoryCode && doc['Subcategoria'] === selectedSubCategory;
+        return match;
+    });
+
+    console.log("Documentos encontrados:", filtered.length);
+    alert("Se encontraron " + filtered.length + " documentos");
 
     if (filtered.length === 0) {
         resultsContainer.innerHTML = '';
