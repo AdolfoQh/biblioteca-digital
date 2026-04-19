@@ -866,14 +866,14 @@ const subCategorySelect = document.getElementById('subCategory');
 const resultsContainer = document.getElementById('results-container');
 const noResults = document.getElementById('no-results');
 
-// Cargar documentos desde Google Apps Script
-fetch(API_URL + "?action=getCatalog")
+// Cargar documentos desde JSON local
+fetch('./catalogo.json')
     .then(response => {
-        console.log("API Response status:", response.status);
+        console.log("JSON Response status:", response.status);
         return response.json();
     })
     .then(data => {
-        console.log("API Data:", data);
+        console.log("JSON Data:", data);
         if (data.success) {
             allDocuments = data.documents;
             console.log("Catálogo cargado. Total documentos:", allDocuments.length);
