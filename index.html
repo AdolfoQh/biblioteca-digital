@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* HEADER */
+        header {
+            padding: 2rem 3rem;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #1a1a1a;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .btn-admin {
+            background: transparent;
+            color: #1a1a1a;
+            padding: 0.6rem 1.5rem;
+            border: 1.5px solid #1a1a1a;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-admin:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        /* HERO */
+        .hero {
+            padding: 7rem 3rem 5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 5.5rem;
+            font-weight: 900;
+            margin-bottom: 1.2rem;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            color: #1a1a1a;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: #666;
+            margin-bottom: 3.5rem;
+            font-weight: 400;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .search-hero {
+            display: flex;
+            gap: 1rem;
+            max-width: 700px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .search-hero input {
+            flex: 1;
+            padding: 1.2rem 1.8rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        .search-hero input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: #fafafa;
+            box-shadow: 0 0 0 8px rgba(26, 26, 26, 0.05);
+        }
+
+        .category-select {
+            flex: 1;
+            padding: 1.2rem 1.8rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            background: white;
+            cursor: pointer;
+            color: #1a1a1a;
+        }
+
+        .category-select:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: #fafafa;
+            box-shadow: 0 0 0 8px rgba(26, 26, 26, 0.05);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+        }
+
+        /* SECTION TITLES */
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            letter-spacing: -0.8px;
+            color: #1a1a1a;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        /* FEATURED */
+        .featured {
+            margin-bottom: 6rem;
+        }
+
+        .featured-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .featured-main {
+            background: linear-gradient(135deg, #f8f8f8 0%, #fafafa 100%);
+            border-radius: 4px;
+            padding: 4rem;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .featured-main::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(26,26,26,0.5) 0%, rgba(26,26,26,0.3) 100%);
+            z-index: 0;
+        }
+
+        .featured-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(26, 26, 26, 0.03) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .featured-main:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .featured-main:hover::before {
+            opacity: 1;
+        }
+
+        .featured-main h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.8px;
+            color: white;
+        }
+
+        .featured-main .meta {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.3px;
+        }
+
+        .featured-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .featured-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .featured-card:nth-child(1) { animation-delay: 0.2s; }
+        .featured-card:nth-child(2) { animation-delay: 0.3s; }
+        .featured-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(228, 117, 57, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .featured-card:hover::before {
+            left: 100%;
+        }
+
+        .featured-card:hover {
+            background: #f0f0f0;
+            border-left-color: #e47539;
+            transform: translateX(8px);
+        }
+
+        .featured-card h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .featured-card p {
+            font-size: 0.9rem;
+            color: #999;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        /* CATEGORIES */
+        .categories {
+            margin-bottom: 6rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .category-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #f8f8f8 0%, #fafafa 100%);
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out both;
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+
+        .category-icon {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1;
+            margin: 0 auto 1.5rem;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            background-color: #f0f0f0;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(228, 117, 57, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-card:hover {
+            background: #f0f0f0;
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.4px;
+        }
+
+        .category-card p {
+            font-size: 0.95rem;
+            color: #999;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .count {
+            display: inline-block;
+            background: #e47539;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.3px;
+            margin-top: 1rem;
+        }
+
+        .doc-count {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        /* BROWSE */
+        .browse-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            letter-spacing: -0.8px;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .doc-card {
+            background: #f9f9f9;
+            border-radius: 4px;
+            padding: 2.2rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out both;
+            border: 1px solid transparent;
+        }
+
+        .doc-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(26, 26, 26, 0.02) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .doc-card:hover {
+            background: #f0f0f0;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border-color: #e5e5e5;
+        }
+
+        .doc-card:hover::after {
+            opacity: 1;
+        }
+
+        .doc-card h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.3px;
+        }
+
+        .doc-card .doc-meta {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .doc-card .btn-get {
+            background: transparent;
+            color: #1a1a1a;
+            border: 1.5px solid #1a1a1a;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .doc-card .btn-get:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 5rem 3rem;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(228, 117, 57, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .cta:hover::before {
+            opacity: 1;
+        }
+
+        .cta h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .cta button {
+            background: transparent;
+            color: white;
+            padding: 0.9rem 2.5rem;
+            border: 1.5px solid white;
+            border-radius: 3px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta button:hover {
+            background: white;
+            color: #1a1a1a;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .featured-content {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title,
+            .browse-title,
+            .cta h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo">Biblioteca Digital</div>
+        <nav>
+            <a href="#explore">Explorar</a>
+            <a href="#about">Acerca de</a>
+            <a href="admin.html" class="btn-admin">Admin</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Recursos para diseñadores e investigadores</h1>
+    <p>Documentos sobre diseño, tecnología y educación</p>
+    <div class="search-hero">
+        <select id="mainCategory" class="category-select">
+            <option value="">Selecciona una categoría</option>
+            <option value="educacion">Educación</option>
+            <option value="investigacion">Investigación</option>
+            <option value="diseno">Diseño</option>
+            <option value="negocios">Negocios & Emprendimiento</option>
+            <option value="tecnologia">Tecnología Digital</option>
+            <option value="pensamiento">Pensamiento & Teoría</option>
+            <option value="comunicacion">Comunicación & Media</option>
+            <option value="personal">Personal & Desarrollo</option>
+            <option value="archivo">Archivo</option>
+        </select>
+        <select id="subCategory" class="category-select" style="display: none;">
+            <option value="">Selecciona subcategoría</option>
+        </select>
+    </div>
+</section>
+
+<div class="container">
+    <section class="featured">
+        <h2 class="section-title">Destacados</h2>
+        <div class="featured-content">
+            <div class="featured-main" style="background-image: url('featured-01.jpg'); background-size: cover; background-position: center;">
+                <h3>Fundamentos de Diseño Digital Contemporáneo</h3>
+                <div class="meta">Por María García • UX/UI Design</div>
+            </div>
+            <div class="featured-sidebar">
+                <div class="featured-card">
+                    <h4>Tipografía Web Moderna</h4>
+                    <p>Guía completa sobre tipografías digitales contemporáneas</p>
+                </div>
+                <div class="featured-card">
+                    <h4>Sistemas de Diseño</h4>
+                    <p>Cómo construir y mantener sistemas escalables</p>
+                </div>
+                <div class="featured-card">
+                    <h4>Investigación UX</h4>
+                    <p>Metodologías de investigación en experiencia de usuario</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories">
+        <h2 class="section-title">Explorar</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-educacion.jpg');"></div>
+                <h3>Educación</h3>
+                <p>Recursos pedagógicos y educativos</p>
+                <div class="doc-count">837 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-investigacion.jpg');"></div>
+                <h3>Investigación</h3>
+                <p>Metodología, análisis y research</p>
+                <div class="doc-count">1060 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-diseno.jpg');"></div>
+                <h3>Diseño</h3>
+                <p>Visual, UX/UI, sistemas y más</p>
+                <div class="doc-count">539 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-negocios.jpg');"></div>
+                <h3>Negocios & Emprendimiento</h3>
+                <p>Estrategia y desarrollo empresarial</p>
+                <div class="doc-count">324 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-tecno.jpg');"></div>
+                <h3>Tecnología Digital</h3>
+                <p>Desarrollo, herramientas y plataformas</p>
+                <div class="doc-count">437 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-pensamiento.jpg');"></div>
+                <h3>Pensamiento & Teoría</h3>
+                <p>Filosofía, epistemología y teoría</p>
+                <div class="doc-count">183 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-comunicacion.jpg');"></div>
+                <h3>Comunicación & Media</h3>
+                <p>Narrativa, audiovisual y contenido</p>
+                <div class="doc-count">86 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-personal.jpg');"></div>
+                <h3>Personal & Desarrollo</h3>
+                <p>Crecimiento, bienestar y habilidades</p>
+                <div class="doc-count">90 documentos</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon" style="background-image: url('cat-archivo.jpg');"></div>
+                <h3>Archivo</h3>
+                <p>Documentos diversos y referencia</p>
+                <div class="doc-count">1051 documentos</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="browse">
+        <h2 class="browse-title">Todos los recursos</h2>
+        <div id="results-container" class="results-grid"></div>
+        <div id="no-results" style="text-align: center; padding: 3rem; color: #999; display: none;">
+            <p>Selecciona una categoría y subcategoría para ver los documentos</p>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>¿Querés colaborar?</h2>
+        <p>Contribuye documentos y comparte tu conocimiento con la comunidad</p>
+        <button id="btnEnviarDocumento">Enviar documento</button>
+    </section>
+
+    <!-- Modal para enviar documento -->
+    <div id="modalEnvio" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%;">
+            <h3>Enviar nuevo documento</h3>
+            <form id="formEnvio" style="display: flex; flex-direction: column; gap: 1rem;">
+                <input type="text" id="inputTitulo" placeholder="Título del documento" required>
+                <input type="text" id="inputAutor" placeholder="Autor (opcional)">
+                <select id="inputCategoria" required>
+                    <option value="">Selecciona categoría</option>
+                    <option value="01_EDUCACIÓN">Educación</option>
+                    <option value="02_INVESTIGACIÓN">Investigación</option>
+                    <option value="03_DISEÑO">Diseño</option>
+                    <option value="04_NEGOCIOS_EMPRENDIMIENTO">Negocios & Emprendimiento</option>
+                    <option value="05_TECNOLOGÍA_DIGITAL">Tecnología Digital</option>
+                    <option value="06_PENSAMIENTO_TEORÍA">Pensamiento & Teoría</option>
+                    <option value="07_COMUNICACIÓN_MEDIA">Comunicación & Media</option>
+                    <option value="08_PERSONAL_DESARROLLO">Personal & Desarrollo</option>
+                    <option value="09_ARCHIVO">Archivo</option>
+                </select>
+                <input type="text" id="inputSubcategoria" placeholder="Subcategoría">
+                <input type="email" id="inputEmail" placeholder="Tu email">
+                <button type="submit" style="background: #1a1a1a; color: white; padding: 0.8rem; border: none; border-radius: 4px; cursor: pointer;">Enviar para revisión</button>
+                <button type="button" id="btnCerrarModal" style="background: #f0f0f0; padding: 0.8rem; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+let allDocuments = [];
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxULI4-nVGXdbW3PsP65Ydh5rQXwVd22SOwCVwQ39wGvPHNK1p5QmcYK1iuER_Dbt-v/exec";
+
+
+const categoryMap = {
+    educacion: '01_EDUCACIÓN',
+    investigacion: '02_INVESTIGACIÓN',
+    diseno: '03_DISEÑO',
+    negocios: '04_NEGOCIOS_EMPRENDIMIENTO',
+    tecnologia: '05_TECNOLOGÍA_DIGITAL',
+    pensamiento: '06_PENSAMIENTO_TEORÍA',
+    comunicacion: '07_COMUNICACIÓN_MEDIA',
+    personal: '08_PERSONAL_DESARROLLO',
+    archivo: '09_ARCHIVO'
+};
+
+const categoryData = {
+    educacion: ['Cursos', 'Maestría - Gestión del Diseño', 'Material Didáctico', 'Posgrado UX-UI', 'Recursos Educativos', 'Videos y Audiovisuales'],
+    investigacion: ['Datos y Estadística', 'Datos y Resultados', 'Diseño de Experiencias', 'Metodología', 'Publicaciones y Papers', 'Tecnologías Emergentes'],
+    diseno: ['Case Studies', 'Diseño Gráfico', 'Diseño de Interfaces', 'Diseño de Productos', 'Motion Graphics', 'Recursos y Activos', 'Teoría del Diseño', 'UX-UI'],
+    negocios: ['Emprendimiento', 'Estrategia', 'Estrategia y Gestión', 'Finanzas', 'Finanzas y Economía', 'Innovación', 'Liderazgo', 'Marketing'],
+    tecnologia: ['Herramientas Digitales', 'IA e Inteligencia Artificial', 'Nuevas Tecnologías', 'Programación y Desarrollo', 'Software y Herramientas', 'Tecnología Emergente'],
+    pensamiento: ['Antropología y Sociedad', 'Crítica Social', 'Filosofía y Epistemología', 'Literatura y Lenguaje', 'Pedagogía', 'Pensadores Clave', 'Sociología y Antropología'],
+    comunicacion: ['Cine y Audiovisual', 'Comunicación', 'Periodismo', 'Redes Sociales y Digital', 'Revistas y Publicaciones', 'Social Media', 'Videojuegos y Gaming', 'Web y HTML'],
+    personal: ['Cocina y Bienestar', 'Dislexia', 'Intereses Diversos', 'Libros de Lectura', 'Random', 'Vida y Sociedad'],
+    archivo: ['Copia de Seguridad', 'Descargas Varias', 'Formatos Sin Extensión', 'Miscelánea', 'Para Revisar']
+};
+
+const mainCategorySelect = document.getElementById('mainCategory');
+const subCategorySelect = document.getElementById('subCategory');
+const resultsContainer = document.getElementById('results-container');
+const noResults = document.getElementById('no-results');
+
+// Cargar documentos desde Google Apps Script
+fetch(API_URL + "?action=getCatalog")
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            allDocuments = data.documents;
+        } else {
+            console.error("Error cargando catálogo:", data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+
+
+mainCategorySelect.addEventListener('change', function() {
+    const selectedCategory = this.value;
+
+    if (selectedCategory === '') {
+        subCategorySelect.style.display = 'none';
+        subCategorySelect.innerHTML = '<option value="">Selecciona subcategoría</option>';
+        resultsContainer.innerHTML = '';
+        noResults.style.display = 'block';
+    } else {
+        subCategorySelect.innerHTML = '<option value="">Selecciona subcategoría</option>';
+
+        const subcategories = categoryData[selectedCategory];
+        subcategories.forEach(sub => {
+            const option = document.createElement('option');
+            option.value = sub;
+            option.textContent = sub;
+            subCategorySelect.appendChild(option);
+        });
+
+        subCategorySelect.style.display = 'flex';
+        resultsContainer.innerHTML = '';
+        noResults.style.display = 'block';
+    }
+});
+
+subCategorySelect.addEventListener('change', function() {
+    const selectedMainCategory = mainCategorySelect.value;
+    const selectedSubCategory = this.value;
+
+    if (!selectedMainCategory || !selectedSubCategory) {
+        resultsContainer.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+    }
+
+    const categoryCode = categoryMap[selectedMainCategory];
+    const filtered = allDocuments.filter(doc =>
+        doc['Categoría'] === categoryCode &&
+        doc['Subcategoría'] === selectedSubCategory
+    );
+
+    if (filtered.length === 0) {
+        resultsContainer.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+    }
+
+    noResults.style.display = 'none';
+    resultsContainer.innerHTML = filtered.map(doc => `
+        <div class="doc-card">
+            <h4>${doc['Título']}</h4>
+            <div class="doc-meta">
+                <span>${doc['Autor'] || 'Sin autor'}</span>
+                <span>${doc['Subcategoría']}</span>
+            </div>
+            <button class="btn-get">Descargar</button>
+        </div>
+    `).join('');
+});
+
+// Modal para enviar documentos
+const btnEnviarDocumento = document.getElementById('btnEnviarDocumento');
+const modalEnvio = document.getElementById('modalEnvio');
+const formEnvio = document.getElementById('formEnvio');
+const btnCerrarModal = document.getElementById('btnCerrarModal');
+
+// Abrir modal
+btnEnviarDocumento.addEventListener('click', function() {
+    modalEnvio.style.display = 'flex';
+});
+
+// Cerrar modal con botón
+btnCerrarModal.addEventListener('click', function(e) {
+    e.preventDefault();
+    modalEnvio.style.display = 'none';
+    formEnvio.reset();
+});
+
+// Cerrar modal clickeando en el overlay
+modalEnvio.addEventListener('click', function(e) {
+    if (e.target === modalEnvio) {
+        modalEnvio.style.display = 'none';
+        formEnvio.reset();
+    }
+});
+
+// Enviar formulario
+formEnvio.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const titulo = document.getElementById('inputTitulo').value;
+    const autor = document.getElementById('inputAutor').value;
+    const categoria = document.getElementById('inputCategoria').value;
+    const subcategoria = document.getElementById('inputSubcategoria').value;
+    const email = document.getElementById('inputEmail').value;
+    
+    if (!titulo || !categoria || !subcategoria || !email) {
+        alert('Por favor, completa los campos requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'uploadDocument',
+                data: {
+                    titulo: titulo,
+                    autor: autor,
+                    categoria: categoria,
+                    subcategoria: subcategoria,
+                    email: email,
+                    timestamp: new Date().toISOString()
+                }
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('¡Documento enviado exitosamente! Será revisado por nuestro equipo.');
+            modalEnvio.style.display = 'none';
+            formEnvio.reset();
+        } else {
+            alert('Error: ' + (result.error || 'No se pudo enviar el documento'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al enviar el documento. Por favor, intenta de nuevo.');
+    }
+});
+
+</script>
+
+</body>
+</html>
