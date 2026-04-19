@@ -708,7 +708,7 @@
     <section class="featured">
         <h2 class="section-title">Destacados</h2>
         <div class="featured-content">
-            <div class="featured-main" style="background-image: url('featured-01.jpg'); background-size: cover; background-position: center;">
+            <div class="featured-main" style="background-image: url('./featured-01.jpg'); background-size: cover; background-position: center;">
                 <h3>Fundamentos de Diseño Digital Contemporáneo</h3>
                 <div class="meta">Por María García • UX/UI Design</div>
             </div>
@@ -733,55 +733,55 @@
         <h2 class="section-title">Explorar</h2>
         <div class="category-grid">
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-educacion.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-educacion.jpg');"></div>
                 <h3>Educación</h3>
                 <p>Recursos pedagógicos y educativos</p>
                 <div class="doc-count">837 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-investigacion.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-investigacion.jpg');"></div>
                 <h3>Investigación</h3>
                 <p>Metodología, análisis y research</p>
                 <div class="doc-count">1060 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-diseno.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-diseno.jpg');"></div>
                 <h3>Diseño</h3>
                 <p>Visual, UX/UI, sistemas y más</p>
                 <div class="doc-count">539 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-negocios.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-negocios.jpg');"></div>
                 <h3>Negocios & Emprendimiento</h3>
                 <p>Estrategia y desarrollo empresarial</p>
                 <div class="doc-count">324 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-tecno.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-tecno.jpg');"></div>
                 <h3>Tecnología Digital</h3>
                 <p>Desarrollo, herramientas y plataformas</p>
                 <div class="doc-count">437 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-pensamiento.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-pensamiento.jpg');"></div>
                 <h3>Pensamiento & Teoría</h3>
                 <p>Filosofía, epistemología y teoría</p>
                 <div class="doc-count">183 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-comunicacion.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-comunicacion.jpg');"></div>
                 <h3>Comunicación & Media</h3>
                 <p>Narrativa, audiovisual y contenido</p>
                 <div class="doc-count">86 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-personal.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-personal.jpg');"></div>
                 <h3>Personal & Desarrollo</h3>
                 <p>Crecimiento, bienestar y habilidades</p>
                 <div class="doc-count">90 documentos</div>
             </div>
             <div class="category-card">
-                <div class="category-icon" style="background-image: url('cat-archivo.jpg');"></div>
+                <div class="category-icon" style="background-image: url('./cat-archivo.jpg');"></div>
                 <h3>Archivo</h3>
                 <p>Documentos diversos y referencia</p>
                 <div class="doc-count">1051 documentos</div>
@@ -868,15 +868,20 @@ const noResults = document.getElementById('no-results');
 
 // Cargar documentos desde Google Apps Script
 fetch(API_URL + "?action=getCatalog")
-    .then(response => response.json())
+    .then(response => {
+        console.log("API Response status:", response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log("API Data:", data);
         if (data.success) {
             allDocuments = data.documents;
+            console.log("Catálogo cargado. Total documentos:", allDocuments.length);
         } else {
             console.error("Error cargando catálogo:", data.message);
         }
     })
-    .catch(error => console.error("Error:", error));
+    .catch(error => console.error("Error en fetch:", error));
 
 
 mainCategorySelect.addEventListener('change', function() {
