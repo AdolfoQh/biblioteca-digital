@@ -916,8 +916,8 @@ subCategorySelect.addEventListener('change', function() {
 
     const categoryCode = categoryMap[selectedMainCategory];
     const filtered = allDocuments.filter(doc =>
-        doc['Categoría'] === categoryCode &&
-        doc['Subcategoría'] === selectedSubCategory
+        doc['Categoria'] === categoryCode &&
+        doc['Subcategoria'] === selectedSubCategory
     );
 
     if (filtered.length === 0) {
@@ -929,10 +929,10 @@ subCategorySelect.addEventListener('change', function() {
     noResults.style.display = 'none';
     resultsContainer.innerHTML = filtered.map(doc => `
         <div class="doc-card">
-            <h4>${doc['Título']}</h4>
+            <h4>${doc['Titulo']}</h4>
             <div class="doc-meta">
                 <span>${doc['Autor'] || 'Sin autor'}</span>
-                <span>${doc['Subcategoría']}</span>
+                <span>${doc['Subcategoria']}</span>
             </div>
             <button class="btn-get">Descargar</button>
         </div>
