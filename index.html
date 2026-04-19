@@ -867,21 +867,29 @@ const resultsContainer = document.getElementById('results-container');
 const noResults = document.getElementById('no-results');
 
 // Cargar documentos desde JSON local
+console.log("Iniciando carga de catalogo.json...");
 fetch('./catalogo.json')
     .then(response => {
         console.log("JSON Response status:", response.status);
+        if (!response.ok) throw new Error("Error al cargar JSON: " + response.status);
         return response.json();
     })
     .then(data => {
-        console.log("JSON Data:", data);
-        if (data.success) {
+        console.log("JSON cargado. Data:", data);
+        console.log("Total en JSON:", data.total);
+        console.log("Documentos en JSON:", data.documents ? data.documents.length : 0);
+        if (data.success && data.documents) {
             allDocuments = data.documents;
-            console.log("Catálogo cargado. Total documentos:", allDocuments.length);
+            console.log("✓ Catálogo cargado exitosamente. Total:", allDocuments.length);
+            console.log("Primer documento:", allDocuments[0]);
         } else {
-            console.error("Error cargando catálogo:", data.message);
+            console.error("Error: data.success =", data.success);
         }
     })
-    .catch(error => console.error("Error en fetch:", error));
+    .catch(error => {
+        console.error("❌ Error en fetch:", error);
+        alert("Error cargando el catálogo: " + error);
+    });
 
 
 mainCategorySelect.addEventListener('change', function() {
