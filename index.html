@@ -35,14 +35,14 @@
         nav { display: flex; gap: 2rem; align-items: center; }
         nav a { font-size: 0.85rem; font-weight: 500; color: #666; text-decoration: none; transition: color 0.2s; }
         nav a:hover { color: #1a1a1a; }
-        .btn-admin {
-            background: transparent; color: #1a1a1a; padding: 0.5rem 1.2rem;
+        .btn-enviar {
+            background: #1a1a1a; color: white; padding: 0.5rem 1.2rem;
             border: 1.5px solid #1a1a1a; border-radius: 3px; font-size: 0.75rem;
             font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
-            text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 0.5px;
             transition: all 0.2s;
         }
-        .btn-admin:hover { background: #1a1a1a; color: white; }
+        .btn-enviar:hover { background: #333; }
 
         /* HERO */
         .hero {
@@ -217,7 +217,7 @@
         <div class="logo">Biblioteca Digital</div>
         <nav>
             <a href="#explorar">Explorar</a>
-            <a href="admin.html" class="btn-admin">Admin</a>
+            <button class="btn-enviar" id="btnEnviarNav">Enviar documento</button>
         </nav>
     </div>
 </header>
@@ -230,25 +230,12 @@
 <div class="container">
     <section class="featured">
         <h2 class="section-title">Destacados</h2>
-        <div class="featured-content">
-            <div class="featured-main" style="background-image: url('./featured-01.jpg');">
-                <h3>Fundamentos de Diseño Digital Contemporáneo</h3>
-                <div class="meta">UX/UI Design</div>
+        <div class="featured-content" id="featured-content">
+            <div class="featured-main" id="featured-main" style="background-image: url('./featured-01.jpg');">
+                <h3 id="featured-main-title">Cargando...</h3>
+                <div class="meta" id="featured-main-cat"></div>
             </div>
-            <div class="featured-sidebar">
-                <div class="featured-card">
-                    <h4>Tipografía Web Moderna</h4>
-                    <p>Guía completa sobre tipografías digitales contemporáneas</p>
-                </div>
-                <div class="featured-card">
-                    <h4>Sistemas de Diseño</h4>
-                    <p>Cómo construir y mantener sistemas escalables</p>
-                </div>
-                <div class="featured-card">
-                    <h4>Investigación UX</h4>
-                    <p>Metodologías de investigación en experiencia de usuario</p>
-                </div>
-            </div>
+            <div class="featured-sidebar" id="featured-sidebar"></div>
         </div>
     </section>
 
@@ -324,17 +311,21 @@
                 <input type="text" id="inputAutor" placeholder="Autor (opcional)" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                 <select id="inputCategoria" required style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                     <option value="">Selecciona categoría</option>
-                    <option value="01_EDUCACIÓN">Educación</option>
-                    <option value="02_INVESTIGACIÓN">Investigación</option>
-                    <option value="03_DISEÑO">Diseño</option>
-                    <option value="04_NEGOCIOS_EMPRENDIMIENTO">Negocios & Emprendimiento</option>
-                    <option value="05_TECNOLOGÍA_DIGITAL">Tecnología Digital</option>
-                    <option value="06_PENSAMIENTO_TEORÍA">Pensamiento & Teoría</option>
-                    <option value="07_COMUNICACIÓN_MEDIA">Comunicación & Media</option>
-                    <option value="08_PERSONAL_DESARROLLO">Personal & Desarrollo</option>
-                    <option value="09_ARCHIVO">Archivo</option>
+                    <option value="educacion">Educación</option>
+                    <option value="investigacion">Investigación</option>
+                    <option value="diseno">Diseño</option>
+                    <option value="negocios">Negocios & Emprendimiento</option>
+                    <option value="tecnologia">Tecnología Digital</option>
+                    <option value="pensamiento">Pensamiento & Teoría</option>
+                    <option value="comunicacion">Comunicación & Media</option>
+                    <option value="personal">Personal & Desarrollo</option>
+                    <option value="archivo">Archivo</option>
+                    <option value="varios">Varios / Desconocido</option>
                 </select>
-                <input type="text" id="inputSubcategoria" placeholder="Subcategoría" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
+                <select id="inputSubcategoria" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif; display:none;">
+                    <option value="">Selecciona subcategoría</option>
+                </select>
+                <input type="text" id="inputSubcategoriaLibre" placeholder="Subcategoría (si no está en la lista)" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif; display:none;">
                 <input type="email" id="inputEmail" placeholder="Tu email" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                 <button type="submit" style="background:#1a1a1a; color:white; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Enviar para revisión</button>
                 <button type="button" id="btnCerrarModal" style="background:#f0f0f0; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Cancelar</button>
@@ -396,9 +387,37 @@ fetch('./catalogo.json')
         if (data.success && data.documents) {
             allDocuments = data.documents;
             updateCardCounts();
+            renderFeatured();
         }
     })
     .catch(err => console.error('Error:', err));
+
+function renderFeatured() {
+    // 4 docs aleatorios con DriveID
+    const pool = allDocuments.filter(d => d.DriveID);
+    const picks = [];
+    const used = new Set();
+    while (picks.length < 4 && picks.length < pool.length) {
+        const i = Math.floor(Math.random() * pool.length);
+        if (!used.has(i)) { used.add(i); picks.push(pool[i]); }
+    }
+    if (!picks.length) return;
+
+    const catLabel = cat => categoryLabels[Object.keys(categoryMap).find(k => categoryMap[k] === cat)] || cat;
+
+    const main = picks[0];
+    document.getElementById('featured-main-title').textContent = main.Titulo;
+    document.getElementById('featured-main-cat').textContent = catLabel(main.Categoria) + (main.Subcategoria ? ' · ' + main.Subcategoria : '');
+    document.getElementById('featured-main').style.cursor = 'pointer';
+    document.getElementById('featured-main').onclick = () => window.open('https://drive.google.com/file/d/' + main.DriveID + '/view', '_blank');
+
+    document.getElementById('featured-sidebar').innerHTML = picks.slice(1).map(doc => `
+        <a href="https://drive.google.com/file/d/${doc.DriveID}/view" target="_blank" class="featured-card" style="text-decoration:none; color:inherit;">
+            <h4>${doc.Titulo}</h4>
+            <p>${catLabel(doc.Categoria)}${doc.Subcategoria ? ' · ' + doc.Subcategoria : ''}</p>
+        </a>
+    `).join('');
+}
 
 function updateCardCounts() {
     const counts = {};
@@ -505,28 +524,58 @@ prevPageBtn.addEventListener('click', () => { renderPage(currentPage - 1); resul
 nextPageBtn.addEventListener('click', () => { renderPage(currentPage + 1); resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 
 // Modal
-const btnEnviarDocumento = document.getElementById('btnEnviarDocumento');
 const modalEnvio = document.getElementById('modalEnvio');
 const formEnvio = document.getElementById('formEnvio');
 const btnCerrarModal = document.getElementById('btnCerrarModal');
+const inputCategoria = document.getElementById('inputCategoria');
+const inputSubcategoria = document.getElementById('inputSubcategoria');
+const inputSubcategoriaLibre = document.getElementById('inputSubcategoriaLibre');
 
-btnEnviarDocumento.addEventListener('click', () => modalEnvio.style.display = 'flex');
-btnCerrarModal.addEventListener('click', e => { e.preventDefault(); modalEnvio.style.display = 'none'; formEnvio.reset(); });
-modalEnvio.addEventListener('click', e => { if (e.target === modalEnvio) { modalEnvio.style.display = 'none'; formEnvio.reset(); } });
+function openModal() { modalEnvio.style.display = 'flex'; }
+function closeModal() { modalEnvio.style.display = 'none'; formEnvio.reset(); inputSubcategoria.style.display = 'none'; inputSubcategoriaLibre.style.display = 'none'; }
+
+document.getElementById('btnEnviarDocumento').addEventListener('click', openModal);
+document.getElementById('btnEnviarNav').addEventListener('click', openModal);
+btnCerrarModal.addEventListener('click', e => { e.preventDefault(); closeModal(); });
+modalEnvio.addEventListener('click', e => { if (e.target === modalEnvio) closeModal(); });
+
+inputCategoria.addEventListener('change', function() {
+    const cat = this.value;
+    if (cat === 'varios' || !cat) {
+        inputSubcategoria.style.display = 'none';
+        inputSubcategoriaLibre.style.display = 'block';
+        inputSubcategoriaLibre.placeholder = 'Subcategoría (opcional)';
+    } else {
+        const subs = categoryData[cat] || [];
+        inputSubcategoria.innerHTML = '<option value="">Selecciona subcategoría</option>' +
+            subs.map(s => `<option value="${s}">${s}</option>`).join('') +
+            '<option value="__otra__">Otra...</option>';
+        inputSubcategoria.style.display = 'block';
+        inputSubcategoriaLibre.style.display = 'none';
+    }
+});
+
+inputSubcategoria.addEventListener('change', function() {
+    inputSubcategoriaLibre.style.display = this.value === '__otra__' ? 'block' : 'none';
+    if (this.value === '__otra__') inputSubcategoriaLibre.placeholder = 'Escribí la subcategoría';
+});
 
 formEnvio.addEventListener('submit', async function(e) {
     e.preventDefault();
     const titulo = document.getElementById('inputTitulo').value;
     const autor = document.getElementById('inputAutor').value;
-    const categoria = document.getElementById('inputCategoria').value;
-    const subcategoria = document.getElementById('inputSubcategoria').value;
+    const catVal = inputCategoria.value;
+    let subcategoria = inputSubcategoria.value === '__otra__' || catVal === 'varios'
+        ? inputSubcategoriaLibre.value
+        : inputSubcategoria.value;
     const email = document.getElementById('inputEmail').value;
-    if (!titulo || !categoria || !subcategoria || !email) { alert('Por favor, completa los campos requeridos'); return; }
+    const categoria = categoryMap[catVal] || catVal;
+    if (!titulo || !catVal || !email) { alert('Por favor, completá título, categoría y email'); return; }
     try {
         const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, timestamp: new Date().toISOString() } }) });
         const result = await r.json();
-        if (result.success) { alert('¡Documento enviado!'); modalEnvio.style.display = 'none'; formEnvio.reset(); }
+        if (result.success) { alert('¡Documento enviado!'); closeModal(); }
         else alert('Error: ' + (result.error || 'No se pudo enviar'));
     } catch { alert('Error al enviar. Intentá de nuevo.'); }
 });
