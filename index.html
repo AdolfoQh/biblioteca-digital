@@ -490,92 +490,81 @@
             animation: fadeInUp 0.8s ease-out both;
         }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2.5rem;
-            margin-bottom: 4rem;
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1.5rem;
+            border-top: 2px solid #1a1a1a;
         }
 
-        .doc-card {
-            background: #f9f9f9;
-            border-radius: 4px;
-            padding: 2.2rem;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease-out both;
-            border: 1px solid transparent;
-        }
-
-        .doc-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(26, 26, 26, 0.02) 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .doc-card:hover {
-            background: #f0f0f0;
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-            border-color: #e5e5e5;
-        }
-
-        .doc-card:hover::after {
-            opacity: 1;
-        }
-
-        .doc-card h4 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            line-height: 1.4;
-            position: relative;
-            z-index: 1;
-            letter-spacing: -0.3px;
-        }
-
-        .doc-card .doc-meta {
+        .results-count {
             font-size: 0.85rem;
             color: #999;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
+            font-weight: 600;
+            margin-top: 1rem;
+            letter-spacing: 0.3px;
         }
 
-        .doc-card .btn-get {
+        .doc-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e5e5e5;
+            gap: 1.5rem;
+            animation: fadeInUp 0.3s ease-out both;
+        }
+
+        .doc-row:hover {
+            background: #fafafa;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin: 0 -0.5rem;
+            border-radius: 4px;
+        }
+
+        .doc-row-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .doc-row-info h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doc-row-info span {
+            font-size: 0.78rem;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .btn-get {
             background: transparent;
             color: #1a1a1a;
             border: 1.5px solid #1a1a1a;
-            padding: 0.7rem 1.5rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 3px;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
+            white-space: nowrap;
+            transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            position: relative;
-            z-index: 1;
+            flex-shrink: 0;
         }
 
-        .doc-card .btn-get:hover {
+        .btn-get:hover {
             background: #1a1a1a;
             color: white;
-            transform: translateY(-2px);
         }
 
         /* CTA */
@@ -702,6 +691,11 @@
             <option value="">Selecciona subcategoría</option>
         </select>
     </div>
+    <div id="results-count" class="results-count" style="display:none;"></div>
+    <div id="results-container" class="results-list" style="display:none;"></div>
+    <div id="no-results" style="display:none; padding: 1.5rem 0; color: #999; font-size: 0.9rem;">
+        No se encontraron documentos en esta subcategoría.
+    </div>
 </section>
 
 <div class="container">
@@ -789,14 +783,6 @@
         </div>
     </section>
 
-    <section id="browse">
-        <h2 class="browse-title">Todos los recursos</h2>
-        <div id="results-container" class="results-grid"></div>
-        <div id="no-results" style="text-align: center; padding: 3rem; color: #999; display: none;">
-            <p>Selecciona una categoría y subcategoría para ver los documentos</p>
-        </div>
-    </section>
-
     <section class="cta">
         <h2>¿Querés colaborar?</h2>
         <p>Contribuye documentos y comparte tu conocimiento con la comunidad</p>
@@ -850,20 +836,21 @@ const categoryMap = {
 };
 
 const categoryData = {
-    educacion: ['Cursos', 'Maestría - Gestión del Diseño', 'Material Didáctico', 'Posgrado UX-UI', 'Videos y Audiovisuales'],
-    investigacion: ['Datos y Resultados', 'Diseño de Experiencias', 'Metodología', 'Publicaciones y Papers', 'Tecnologías Emergentes'],
+    educacion: ['Cursos', 'Maestría - Gestión del Diseño', 'Material Didáctico', 'Posgrado UX-UI', 'Recursos Educativos', 'Videos y Audiovisuales'],
+    investigacion: ['Datos y Estadística', 'Datos y Resultados', 'Diseño de Experiencias', 'Metodología', 'Publicaciones y Papers', 'Tecnologías Emergentes'],
     diseno: ['Case Studies', 'Diseño Gráfico', 'Diseño de Productos', 'Motion Graphics', 'Recursos y Activos', 'Teoría del Diseño', 'UX-UI'],
-    negocios: ['Emprendimiento', 'Finanzas y Economía', 'Innovación', 'Liderazgo'],
-    tecnologia: ['Nuevas Tecnologías', 'Programación y Desarrollo', 'Software y Herramientas', 'Tecnologías Emergentes'],
-    pensamiento: ['Antropología y Sociedad', 'Crítica Social', 'Filosofía y Epistemología', 'Pedagogía', 'Pensadores Clave'],
-    comunicacion: ['Comunicación', 'Revistas y Publicaciones', 'Videojuegos y Gaming', 'Web y HTML'],
-    personal: ['Cocina y Bienestar', 'Libros de Lectura'],
-    archivo: ['Para Revisar']
+    negocios: ['Emprendimiento', 'Estrategia', 'Estrategia y Gestión', 'Finanzas', 'Finanzas y Economía', 'Innovación', 'Liderazgo', 'Marketing'],
+    tecnologia: ['Herramientas Digitales', 'Nuevas Tecnologías', 'Programación y Desarrollo', 'Software y Herramientas', 'Tecnología Emergente'],
+    pensamiento: ['Antropología y Sociedad', 'Crítica Social', 'Filosofía y Epistemología', 'Literatura y Lenguaje', 'Pedagogía', 'Pensadores Clave', 'Sociología y Antropología'],
+    comunicacion: ['Cine y Audiovisual', 'Comunicación', 'Periodismo', 'Redes Sociales y Digital', 'Revistas y Publicaciones', 'Videojuegos y Gaming', 'Web y HTML'],
+    personal: ['Cocina y Bienestar', 'Libros de Lectura', 'Random', 'Vida y Sociedad'],
+    archivo: ['Miscelánea', 'Para Revisar']
 };
 
 const mainCategorySelect = document.getElementById('mainCategory');
 const subCategorySelect = document.getElementById('subCategory');
 const resultsContainer = document.getElementById('results-container');
+const resultsCount = document.getElementById('results-count');
 const noResults = document.getElementById('no-results');
 
 // Cargar documentos desde JSON local
@@ -942,26 +929,27 @@ subCategorySelect.addEventListener('change', function() {
         return match;
     });
 
-    console.log("Documentos encontrados:", filtered.length);
-    alert("Se encontraron " + filtered.length + " documentos");
-
     if (filtered.length === 0) {
-        resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'none';
+        resultsCount.style.display = 'none';
         noResults.style.display = 'block';
         return;
     }
 
     noResults.style.display = 'none';
+    resultsCount.style.display = 'block';
+    resultsCount.textContent = filtered.length + ' documentos encontrados';
+    resultsContainer.style.display = 'flex';
     resultsContainer.innerHTML = filtered.map(doc => `
-        <div class="doc-card">
-            <h4>${doc['Titulo']}</h4>
-            <div class="doc-meta">
+        <div class="doc-row">
+            <div class="doc-row-info">
+                <h4>${doc['Titulo']}</h4>
                 <span>${doc['Autor'] || 'Sin autor'}</span>
-                <span>${doc['Subcategoria']}</span>
             </div>
             <button class="btn-get">Descargar</button>
         </div>
     `).join('');
+    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 // Modal para enviar documentos
@@ -1043,3 +1031,4 @@ formEnvio.addEventListener('submit', async function(e) {
 
 </body>
 </html>
+
