@@ -326,6 +326,13 @@
                     <option value="">Selecciona subcategoría</option>
                 </select>
                 <input type="text" id="inputSubcategoriaLibre" placeholder="Subcategoría (si no está en la lista)" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif; display:none;">
+                <div id="dropZone" style="border:2px dashed #e5e5e5; border-radius:4px; padding:1.2rem; text-align:center; transition:border-color 0.2s; cursor:pointer;" onclick="document.getElementById('inputArchivo').click()">
+                    <input type="file" id="inputArchivo" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" style="display:none;">
+                    <div id="dropLabel" style="font-size:0.85rem; color:#999; pointer-events:none;">
+                        📎 Hacé click para adjuntar el documento<br>
+                        <span style="font-size:0.72rem;">PDF, Word, PowerPoint, Excel</span>
+                    </div>
+                </div>
                 <input type="email" id="inputEmail" placeholder="Tu email" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                 <button type="submit" style="background:#1a1a1a; color:white; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Enviar para revisión</button>
                 <button type="button" id="btnCerrarModal" style="background:#f0f0f0; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Cancelar</button>
@@ -570,6 +577,16 @@ inputSubcategoria.addEventListener('change', function() {
     if (this.value === '__otra__') inputSubcategoriaLibre.placeholder = 'Escribí la subcategoría';
 });
 
+// Mostrar nombre del archivo al seleccionar
+document.getElementById('inputArchivo').addEventListener('change', function() {
+    const dropLabel = document.getElementById('dropLabel');
+    const dropZone = document.getElementById('dropZone');
+    if (this.files && this.files[0]) {
+        dropLabel.innerHTML = '✅ <strong>' + this.files[0].name + '</strong><br><span style="font-size:0.72rem; color:#999;">Click para cambiar</span>';
+        dropZone.style.borderColor = '#1a1a1a';
+    }
+});
+
 formEnvio.addEventListener('submit', async function(e) {
     e.preventDefault();
     const titulo = document.getElementById('inputTitulo').value;
@@ -580,10 +597,26 @@ formEnvio.addEventListener('submit', async function(e) {
         : inputSubcategoria.value;
     const email = document.getElementById('inputEmail').value;
     const categoria = categoryMap[catVal] || catVal;
+    const archivoInput = document.getElementById('inputArchivo');
+
     if (!titulo || !catVal || !email) { alert('Por favor, completá título, categoría y email'); return; }
+
+    // Leer archivo como base64 si hay uno adjunto
+    let archivoBase64 = null, archivoNombre = null;
+    if (archivoInput.files && archivoInput.files[0]) {
+        const file = archivoInput.files[0];
+        archivoNombre = file.name;
+        archivoBase64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
     try {
         const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, timestamp: new Date().toISOString() } }) });
+            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, archivoNombre, archivoBase64, timestamp: new Date().toISOString() } }) });
         const result = await r.json();
         if (result.success) { alert('¡Documento enviado!'); closeModal(); }
         else alert('Error: ' + (result.error || 'No se pudo enviar'));
