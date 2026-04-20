@@ -622,7 +622,7 @@ formEnvio.addEventListener('submit', async function(e) {
         });
         const result = await r.json();
         if (result.success) { alert('¡Documento enviado correctamente!'); closeModal(); }
-        else alert('Error: ' + (result.error || 'No se pudo enviar'));
+        else alert('Error: ' + (result.message || result.error || 'No se pudo enviar'));
     } catch { alert('Error al enviar. Intentá de nuevo.'); }
 });
 </script>
