@@ -13,17 +13,19 @@
         body { font-family: 'Inter', sans-serif; background: #fff; color: #1a1a1a; overflow-x: hidden; }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes chipIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* HEADER */
         header {
-            padding: 1.5rem 3rem;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 1.5rem 3rem; border-bottom: 1px solid #f0f0f0;
             position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.97);
-            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
         }
         .header-content {
             max-width: 1200px; margin: 0 auto;
@@ -34,10 +36,9 @@
         nav a { font-size: 0.85rem; font-weight: 500; color: #666; text-decoration: none; transition: color 0.2s; }
         nav a:hover { color: #1a1a1a; }
         .btn-admin {
-            background: transparent; color: #1a1a1a;
-            padding: 0.5rem 1.2rem; border: 1.5px solid #1a1a1a;
-            border-radius: 3px; font-size: 0.75rem; font-weight: 600;
-            cursor: pointer; font-family: 'Inter', sans-serif;
+            background: transparent; color: #1a1a1a; padding: 0.5rem 1.2rem;
+            border: 1.5px solid #1a1a1a; border-radius: 3px; font-size: 0.75rem;
+            font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
             text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none;
             transition: all 0.2s;
         }
@@ -45,160 +46,146 @@
 
         /* HERO */
         .hero {
-            padding: 5rem 3rem 3rem;
-            max-width: 1200px; margin: 0 auto;
+            padding: 5rem 3rem 3rem; max-width: 1200px; margin: 0 auto;
             animation: fadeInUp 0.6s ease-out both;
         }
-        .hero h1 {
-            font-size: 4rem; font-weight: 900;
-            margin-bottom: 0.8rem; letter-spacing: -1.5px; line-height: 1.1;
-        }
-        .hero p {
-            font-size: 1.1rem; color: #666; margin-bottom: 2.5rem;
-            font-weight: 400; max-width: 500px; line-height: 1.6;
-        }
+        .hero h1 { font-size: 4rem; font-weight: 900; margin-bottom: 0.8rem; letter-spacing: -1.5px; line-height: 1.1; }
+        .hero p { font-size: 1.1rem; color: #666; font-weight: 400; max-width: 500px; line-height: 1.6; }
 
-        /* SEARCH */
-        .search-hero {
-            display: flex; gap: 0.8rem; max-width: 700px; flex-wrap: wrap;
+        /* MAIN CONTENT */
+        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 3rem; }
+        .section-title { font-size: 2rem; font-weight: 900; margin-bottom: 2rem; letter-spacing: -0.5px; }
+
+        /* FEATURED */
+        .featured { margin-bottom: 5rem; }
+        .featured-content { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start; }
+        .featured-main {
+            border-radius: 8px; padding: 3rem; min-height: 340px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            position: relative; overflow: hidden;
+            background-size: cover; background-position: center; background-color: #e0e0e0;
         }
-        .category-select {
-            flex: 1; min-width: 200px;
-            padding: 1rem 1.4rem; border: 2px solid #e5e5e5; border-radius: 4px;
-            font-size: 0.95rem; font-family: 'Inter', sans-serif; font-weight: 400;
-            background: white; cursor: pointer; color: #1a1a1a;
-            transition: border-color 0.2s;
+        .featured-main::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
         }
-        .category-select:focus { outline: none; border-color: #1a1a1a; }
+        .featured-main h3 {
+            font-size: 1.8rem; font-weight: 800; line-height: 1.3; color: white;
+            position: relative; z-index: 1; letter-spacing: -0.5px; margin-bottom: 0.4rem;
+        }
+        .featured-main .meta { color: rgba(255,255,255,0.75); font-size: 0.85rem; position: relative; z-index: 1; }
+        .featured-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .featured-card {
+            background: #f9f9f9; padding: 1.4rem; border-radius: 6px;
+            cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s;
+        }
+        .featured-card:hover { background: #f0f0f0; border-left-color: #e47539; }
+        .featured-card h4 { font-size: 0.95rem; margin-bottom: 0.3rem; font-weight: 700; }
+        .featured-card p { font-size: 0.82rem; color: #999; line-height: 1.5; }
+
+        /* CATEGORY GRID */
+        .categories { margin-bottom: 2rem; }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .category-card {
+            position: relative; height: 160px; border-radius: 8px; overflow: hidden;
+            cursor: pointer; background-size: cover; background-position: center;
+            background-color: #d0d0d0;
+            transition: transform 0.25s, box-shadow 0.25s, opacity 0.3s;
+            outline: 3px solid transparent; outline-offset: 2px;
+        }
+        .category-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 55%, transparent 100%);
+            transition: background 0.25s;
+        }
+        .category-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.15); }
+        .category-card.dimmed { opacity: 0.3; transform: scale(0.97); }
+        .category-card.active-card { outline-color: #1a1a1a; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .category-card.active-card::after { background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 55%, transparent 100%); }
+        .category-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.9rem; z-index: 1; }
+        .category-card-label h3 { font-size: 0.95rem; font-weight: 700; color: white; letter-spacing: -0.1px; line-height: 1.3; margin-bottom: 0.15rem; }
+        .doc-count { font-size: 0.7rem; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+        /* SUBCATEGORY PANEL */
+        .subcat-panel {
+            overflow: hidden; max-height: 0;
+            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .subcat-panel.open { max-height: 300px; opacity: 1; }
+        .subcat-inner {
+            padding: 1.5rem 0 0.5rem;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .subcat-label {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: #999;
+        }
+        .subcat-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .subcat-chip {
+            padding: 0.45rem 1rem; border: 1.5px solid #e0e0e0; border-radius: 100px;
+            font-size: 0.82rem; font-weight: 500; cursor: pointer; background: white;
+            font-family: 'Inter', sans-serif; transition: all 0.18s;
+            animation: chipIn 0.25s ease-out both;
+        }
+        .subcat-chip:hover { border-color: #1a1a1a; background: #f5f5f5; }
+        .subcat-chip.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
 
         /* RESULTS */
-        .results-header {
-            margin-top: 2rem; padding-bottom: 0.8rem;
-            border-bottom: 2px solid #1a1a1a;
-            display: none;
+        .results-section {
+            overflow: hidden; max-height: 0; opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
         }
-        .results-header h2 {
-            font-size: 1.4rem; font-weight: 800; letter-spacing: -0.4px;
-        }
-        .results-header span {
-            font-size: 0.8rem; color: #999; font-weight: 500; margin-top: 0.2rem; display: block;
-        }
-        .results-list { display: none; flex-direction: column; }
-        .no-results { display: none; padding: 1.5rem 0; color: #999; font-size: 0.9rem; }
+        .results-section.open { max-height: 9000px; opacity: 1; }
+        .results-inner { padding-top: 1.5rem; border-top: 2px solid #1a1a1a; margin-top: 1.5rem; }
+        .results-header { margin-bottom: 0.5rem; }
+        .results-header h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; }
+        .results-header span { font-size: 0.78rem; color: #999; font-weight: 500; }
 
+        .results-list { display: flex; flex-direction: column; margin-top: 0.5rem; }
         .doc-row {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0.9rem 0.5rem; border-bottom: 1px solid #f0f0f0;
+            padding: 0.85rem 0.4rem; border-bottom: 1px solid #f0f0f0;
             gap: 1.5rem; transition: background 0.15s; border-radius: 4px;
         }
         .doc-row:hover { background: #fafafa; }
         .doc-row-info { flex: 1; min-width: 0; }
         .doc-row-info h4 {
-            font-size: 0.9rem; font-weight: 600; line-height: 1.4;
+            font-size: 0.88rem; font-weight: 600; line-height: 1.4;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .doc-row-info span { font-size: 0.75rem; color: #aaa; }
+        .doc-row-info span { font-size: 0.73rem; color: #aaa; }
         .btn-get {
-            background: transparent; color: #1a1a1a;
-            border: 1.5px solid #1a1a1a; padding: 0.4rem 1rem;
-            border-radius: 3px; font-weight: 600; font-size: 0.7rem;
-            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+            background: transparent; color: #1a1a1a; border: 1.5px solid #1a1a1a;
+            padding: 0.4rem 0.9rem; border-radius: 3px; font-weight: 600;
+            font-size: 0.68rem; cursor: pointer; white-space: nowrap; flex-shrink: 0;
             font-family: 'Inter', sans-serif; text-transform: uppercase;
-            letter-spacing: 0.4px; text-decoration: none;
-            transition: all 0.2s;
+            letter-spacing: 0.4px; text-decoration: none; transition: all 0.2s;
         }
         .btn-get:hover { background: #1a1a1a; color: white; }
 
         /* PAGINATION */
         .pagination {
             display: none; align-items: center; justify-content: center;
-            gap: 1rem; padding: 1.5rem 0; margin-top: 0.5rem;
+            gap: 1rem; padding: 1.2rem 0;
         }
         .pagination button {
             background: transparent; border: 1.5px solid #e5e5e5;
-            padding: 0.5rem 1.2rem; border-radius: 3px;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all 0.2s;
+            padding: 0.45rem 1.1rem; border-radius: 3px; font-size: 0.78rem;
+            font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
         }
         .pagination button:hover:not(:disabled) { border-color: #1a1a1a; }
-        .pagination button:disabled { opacity: 0.35; cursor: default; }
-        .pagination span { font-size: 0.8rem; color: #999; }
-
-        /* MAIN CONTENT */
-        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 3rem; }
-
-        .section-title {
-            font-size: 2rem; font-weight: 900; margin-bottom: 2rem;
-            letter-spacing: -0.5px;
-        }
-
-        /* FEATURED */
-        .featured { margin-bottom: 5rem; }
-        .featured-content {
-            display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start;
-        }
-        .featured-main {
-            border-radius: 8px; padding: 3rem; min-height: 380px;
-            display: flex; flex-direction: column; justify-content: flex-end;
-            position: relative; overflow: hidden;
-            background-size: cover; background-position: center;
-            background-color: #f0f0f0;
-        }
-        .featured-main::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
-        }
-        .featured-main h3 {
-            font-size: 1.8rem; font-weight: 800; line-height: 1.3;
-            color: white; position: relative; z-index: 1; letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-        }
-        .featured-main .meta {
-            color: rgba(255,255,255,0.8); font-size: 0.85rem;
-            position: relative; z-index: 1;
-        }
-        .featured-sidebar { display: flex; flex-direction: column; gap: 1rem; }
-        .featured-card {
-            background: #f9f9f9; padding: 1.5rem; border-radius: 6px;
-            cursor: pointer; border-left: 3px solid transparent;
-            transition: all 0.2s;
-        }
-        .featured-card:hover { background: #f0f0f0; border-left-color: #e47539; }
-        .featured-card h4 { font-size: 1rem; margin-bottom: 0.4rem; font-weight: 700; }
-        .featured-card p { font-size: 0.85rem; color: #999; line-height: 1.5; }
-
-        /* CATEGORY CARDS — image with overlay */
-        .categories { margin-bottom: 5rem; }
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.2rem;
-        }
-        .category-card {
-            position: relative; height: 180px; border-radius: 8px; overflow: hidden;
-            cursor: pointer; background-size: cover; background-position: center;
-            background-color: #e0e0e0;
-            transition: transform 0.25s, box-shadow 0.25s;
-        }
-        .category-card::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
-        }
-        .category-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.15); }
-        .category-card-label {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 1rem; z-index: 1;
-        }
-        .category-card-label h3 {
-            font-size: 1rem; font-weight: 700; color: white;
-            letter-spacing: -0.2px; line-height: 1.3; margin-bottom: 0.2rem;
-        }
-        .doc-count { font-size: 0.72rem; color: rgba(255,255,255,0.75); font-weight: 500; }
+        .pagination button:disabled { opacity: 0.3; cursor: default; }
+        .pagination span { font-size: 0.78rem; color: #999; }
 
         /* CTA */
         .cta {
             background: #1a1a1a; color: white; padding: 4rem 3rem;
-            border-radius: 8px; text-align: center; margin-top: 2rem;
+            border-radius: 8px; text-align: center; margin-top: 4rem;
         }
         .cta h2 { font-size: 2rem; margin-bottom: 1rem; font-weight: 900; letter-spacing: -0.5px; }
         .cta p { font-size: 1rem; margin-bottom: 2rem; opacity: 0.8; line-height: 1.7; }
@@ -216,12 +203,9 @@
             .hero h1 { font-size: 2.4rem; }
             .container { padding: 3rem 1.5rem; }
             header { padding: 1rem 1.5rem; }
-            .search-hero { flex-direction: column; }
-            .category-select { min-width: unset; width: 100%; }
             .featured-content { grid-template-columns: 1fr; }
-            .category-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
-            .category-card { height: 140px; }
-            nav { gap: 1rem; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
+            .category-card { height: 130px; }
             nav a:not(.btn-admin) { display: none; }
         }
     </style>
@@ -241,35 +225,6 @@
 <section class="hero">
     <h1>Recursos para diseñadores e investigadores</h1>
     <p>Documentos sobre diseño, tecnología y educación</p>
-    <div class="search-hero">
-        <select id="mainCategory" class="category-select">
-            <option value="">Selecciona una categoría</option>
-            <option value="educacion">Educación</option>
-            <option value="investigacion">Investigación</option>
-            <option value="diseno">Diseño</option>
-            <option value="negocios">Negocios & Emprendimiento</option>
-            <option value="tecnologia">Tecnología Digital</option>
-            <option value="pensamiento">Pensamiento & Teoría</option>
-            <option value="comunicacion">Comunicación & Media</option>
-            <option value="personal">Personal & Desarrollo</option>
-            <option value="archivo">Archivo</option>
-        </select>
-        <select id="subCategory" class="category-select" style="display:none;">
-            <option value="">Selecciona subcategoría</option>
-        </select>
-    </div>
-
-    <div id="results-header" class="results-header">
-        <h2 id="results-title"></h2>
-        <span id="results-count"></span>
-    </div>
-    <div id="results-container" class="results-list"></div>
-    <div id="no-results" class="no-results">No se encontraron documentos en esta subcategoría.</div>
-    <div class="pagination" id="pagination">
-        <button id="prevPage">← Anterior</button>
-        <span id="pageInfo"></span>
-        <button id="nextPage">Siguiente →</button>
-    </div>
 </section>
 
 <div class="container">
@@ -301,57 +256,54 @@
         <h2 class="section-title">Explorar</h2>
         <div class="category-grid">
             <div class="category-card" data-category="educacion" style="background-image: url('./cat-educacion.jpg');">
-                <div class="category-card-label">
-                    <h3>Educación</h3>
-                    <div class="doc-count" data-cat="educacion">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Educación</h3><div class="doc-count" data-cat="educacion">— docs</div></div>
             </div>
             <div class="category-card" data-category="investigacion" style="background-image: url('./cat-investigacion.jpg');">
-                <div class="category-card-label">
-                    <h3>Investigación</h3>
-                    <div class="doc-count" data-cat="investigacion">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Investigación</h3><div class="doc-count" data-cat="investigacion">— docs</div></div>
             </div>
             <div class="category-card" data-category="diseno" style="background-image: url('./cat-diseno.jpg');">
-                <div class="category-card-label">
-                    <h3>Diseño</h3>
-                    <div class="doc-count" data-cat="diseno">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Diseño</h3><div class="doc-count" data-cat="diseno">— docs</div></div>
             </div>
             <div class="category-card" data-category="negocios" style="background-image: url('./cat-negocios.jpg');">
-                <div class="category-card-label">
-                    <h3>Negocios & Emprendimiento</h3>
-                    <div class="doc-count" data-cat="negocios">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Negocios & Emprendimiento</h3><div class="doc-count" data-cat="negocios">— docs</div></div>
             </div>
             <div class="category-card" data-category="tecnologia" style="background-image: url('./cat-tecno.jpg');">
-                <div class="category-card-label">
-                    <h3>Tecnología Digital</h3>
-                    <div class="doc-count" data-cat="tecnologia">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Tecnología Digital</h3><div class="doc-count" data-cat="tecnologia">— docs</div></div>
             </div>
             <div class="category-card" data-category="pensamiento" style="background-image: url('./cat-pensamiento.jpg');">
-                <div class="category-card-label">
-                    <h3>Pensamiento & Teoría</h3>
-                    <div class="doc-count" data-cat="pensamiento">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Pensamiento & Teoría</h3><div class="doc-count" data-cat="pensamiento">— docs</div></div>
             </div>
             <div class="category-card" data-category="comunicacion" style="background-image: url('./cat-comunicacion.jpg');">
-                <div class="category-card-label">
-                    <h3>Comunicación & Media</h3>
-                    <div class="doc-count" data-cat="comunicacion">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Comunicación & Media</h3><div class="doc-count" data-cat="comunicacion">— docs</div></div>
             </div>
             <div class="category-card" data-category="personal" style="background-image: url('./cat-personal.jpg');">
-                <div class="category-card-label">
-                    <h3>Personal & Desarrollo</h3>
-                    <div class="doc-count" data-cat="personal">— documentos</div>
-                </div>
+                <div class="category-card-label"><h3>Personal & Desarrollo</h3><div class="doc-count" data-cat="personal">— docs</div></div>
             </div>
             <div class="category-card" data-category="archivo" style="background-image: url('./cat-archivo.jpg');">
-                <div class="category-card-label">
-                    <h3>Archivo</h3>
-                    <div class="doc-count" data-cat="archivo">— documentos</div>
+                <div class="category-card-label"><h3>Archivo</h3><div class="doc-count" data-cat="archivo">— docs</div></div>
+            </div>
+        </div>
+
+        <!-- Subcategory chips panel -->
+        <div class="subcat-panel" id="subcat-panel">
+            <div class="subcat-inner">
+                <div class="subcat-label" id="subcat-label"></div>
+                <div class="subcat-chips" id="subcat-chips"></div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-section" id="results-section">
+            <div class="results-inner">
+                <div class="results-header">
+                    <h2 id="results-title"></h2>
+                    <span id="results-count"></span>
+                </div>
+                <div id="results-container" class="results-list"></div>
+                <div class="pagination" id="pagination">
+                    <button id="prevPage">← Anterior</button>
+                    <span id="pageInfo"></span>
+                    <button id="nextPage">Siguiente →</button>
                 </div>
             </div>
         </div>
@@ -367,7 +319,7 @@
     <div id="modalEnvio" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
         <div style="background:white; padding:2rem; border-radius:8px; max-width:500px; width:90%;">
             <h3 style="margin-bottom:1rem;">Enviar nuevo documento</h3>
-            <form id="formEnvio" style="display:flex; flex-direction:column; gap:1rem;">
+            <form id="formEnvio" style="display:flex; flex-direction:column; gap:0.8rem;">
                 <input type="text" id="inputTitulo" placeholder="Título del documento" required style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                 <input type="text" id="inputAutor" placeholder="Autor (opcional)" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
                 <select id="inputCategoria" required style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
@@ -395,32 +347,23 @@
 let allDocuments = [];
 let currentFiltered = [];
 let currentPage = 1;
+let activeCategory = null;
 const PAGE_SIZE = 20;
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwTO4icYehQxIZROUWsH3roO3kdvQhqkTsgB9V3m_CWVU713pgAdpA6z3ddvbl2BHDz/exec";
 
 const categoryMap = {
-    educacion: '01_EDUCACIÓN',
-    investigacion: '02_INVESTIGACIÓN',
-    diseno: '03_DISEÑO',
-    negocios: '04_NEGOCIOS_EMPRENDIMIENTO',
-    tecnologia: '05_TECNOLOGÍA_DIGITAL',
-    pensamiento: '06_PENSAMIENTO_TEORÍA',
-    comunicacion: '07_COMUNICACIÓN_MEDIA',
-    personal: '08_PERSONAL_DESARROLLO',
-    archivo: '09_ARCHIVO'
+    educacion: '01_EDUCACIÓN', investigacion: '02_INVESTIGACIÓN', diseno: '03_DISEÑO',
+    negocios: '04_NEGOCIOS_EMPRENDIMIENTO', tecnologia: '05_TECNOLOGÍA_DIGITAL',
+    pensamiento: '06_PENSAMIENTO_TEORÍA', comunicacion: '07_COMUNICACIÓN_MEDIA',
+    personal: '08_PERSONAL_DESARROLLO', archivo: '09_ARCHIVO'
 };
 
 const categoryLabels = {
-    educacion: 'Educación',
-    investigacion: 'Investigación',
-    diseno: 'Diseño',
-    negocios: 'Negocios & Emprendimiento',
-    tecnologia: 'Tecnología Digital',
-    pensamiento: 'Pensamiento & Teoría',
-    comunicacion: 'Comunicación & Media',
-    personal: 'Personal & Desarrollo',
-    archivo: 'Archivo'
+    educacion: 'Educación', investigacion: 'Investigación', diseno: 'Diseño',
+    negocios: 'Negocios & Emprendimiento', tecnologia: 'Tecnología Digital',
+    pensamiento: 'Pensamiento & Teoría', comunicacion: 'Comunicación & Media',
+    personal: 'Personal & Desarrollo', archivo: 'Archivo'
 };
 
 const categoryData = {
@@ -435,13 +378,13 @@ const categoryData = {
     archivo: ['Miscelánea', 'Para Revisar']
 };
 
-const mainCategorySelect = document.getElementById('mainCategory');
-const subCategorySelect = document.getElementById('subCategory');
-const resultsContainer = document.getElementById('results-container');
-const resultsHeader = document.getElementById('results-header');
+const subcatPanel = document.getElementById('subcat-panel');
+const subcatLabel = document.getElementById('subcat-label');
+const subcatChips = document.getElementById('subcat-chips');
+const resultsSection = document.getElementById('results-section');
 const resultsTitle = document.getElementById('results-title');
 const resultsCount = document.getElementById('results-count');
-const noResults = document.getElementById('no-results');
+const resultsContainer = document.getElementById('results-container');
 const pagination = document.getElementById('pagination');
 const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
@@ -455,7 +398,7 @@ fetch('./catalogo.json')
             updateCardCounts();
         }
     })
-    .catch(err => console.error('Error cargando catálogo:', err));
+    .catch(err => console.error('Error:', err));
 
 function updateCardCounts() {
     const counts = {};
@@ -465,35 +408,81 @@ function updateCardCounts() {
         if (key) counts[key]++;
     });
     document.querySelectorAll('.doc-count[data-cat]').forEach(el => {
-        const cat = el.getAttribute('data-cat');
-        if (counts[cat] !== undefined) el.textContent = counts[cat].toLocaleString() + ' documentos';
+        const c = el.getAttribute('data-cat');
+        if (counts[c] !== undefined) el.textContent = counts[c].toLocaleString() + ' docs';
     });
 }
 
-function populateSubcategories(selectedCategory) {
-    subCategorySelect.innerHTML = '<option value="">Selecciona subcategoría</option>';
-    const subcategories = categoryData[selectedCategory] || [];
-    subcategories.forEach(sub => {
-        const option = document.createElement('option');
-        option.value = sub; option.textContent = sub;
-        subCategorySelect.appendChild(option);
+function openCategory(cat) {
+    activeCategory = cat;
+
+    // Dim otras cards, highlight la activa
+    document.querySelectorAll('.category-card').forEach(c => {
+        const isSelf = c.getAttribute('data-category') === cat;
+        c.classList.toggle('dimmed', !isSelf);
+        c.classList.toggle('active-card', isSelf);
     });
-    subCategorySelect.style.display = 'block';
+
+    // Mostrar chips con delay escalonado
+    subcatLabel.textContent = categoryLabels[cat];
+    subcatChips.innerHTML = categoryData[cat].map((sub, i) =>
+        `<button class="subcat-chip" data-sub="${sub}" style="animation-delay:${i * 0.04}s">${sub}</button>`
+    ).join('');
+
+    subcatPanel.classList.add('open');
+
+    // Cerrar resultados si había algo abierto
+    resultsSection.classList.remove('open');
+
+    // Scroll suave al panel
+    setTimeout(() => subcatPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
 }
 
-function clearResults() {
-    resultsContainer.style.display = 'none';
-    resultsContainer.innerHTML = '';
-    resultsHeader.style.display = 'none';
-    noResults.style.display = 'none';
-    pagination.style.display = 'none';
+function closeCategory() {
+    activeCategory = null;
+    document.querySelectorAll('.category-card').forEach(c => {
+        c.classList.remove('dimmed', 'active-card');
+    });
+    subcatPanel.classList.remove('open');
+    resultsSection.classList.remove('open');
 }
+
+// Click en cards
+document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const cat = this.getAttribute('data-category');
+        if (activeCategory === cat) { closeCategory(); return; }
+        openCategory(cat);
+    });
+});
+
+// Click en chips
+subcatChips.addEventListener('click', function(e) {
+    const chip = e.target.closest('.subcat-chip');
+    if (!chip) return;
+    const sub = chip.getAttribute('data-sub');
+
+    // Marcar chip activo
+    subcatChips.querySelectorAll('.subcat-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+
+    // Filtrar
+    const code = categoryMap[activeCategory];
+    currentFiltered = allDocuments.filter(d => d['Categoria'] === code && d['Subcategoria'] === sub);
+
+    resultsTitle.textContent = categoryLabels[activeCategory] + ' › ' + sub;
+    resultsCount.textContent = currentFiltered.length.toLocaleString() + ' documentos';
+
+    resultsSection.classList.add('open');
+    renderPage(1);
+
+    setTimeout(() => resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+});
 
 function renderPage(page) {
     currentPage = page;
     const start = (page - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    const pageItems = currentFiltered.slice(start, end);
+    const pageItems = currentFiltered.slice(start, start + PAGE_SIZE);
     const totalPages = Math.ceil(currentFiltered.length / PAGE_SIZE);
 
     resultsContainer.innerHTML = pageItems.map(doc => `
@@ -512,52 +501,8 @@ function renderPage(page) {
     pagination.style.display = totalPages > 1 ? 'flex' : 'none';
 }
 
-mainCategorySelect.addEventListener('change', function() {
-    const val = this.value;
-    clearResults();
-    if (val) {
-        populateSubcategories(val);
-    } else {
-        subCategorySelect.style.display = 'none';
-        subCategorySelect.innerHTML = '<option value="">Selecciona subcategoría</option>';
-    }
-});
-
-subCategorySelect.addEventListener('change', function() {
-    const cat = mainCategorySelect.value;
-    const sub = this.value;
-    clearResults();
-    if (!cat || !sub) return;
-
-    const code = categoryMap[cat];
-    currentFiltered = allDocuments.filter(d => d['Categoria'] === code && d['Subcategoria'] === sub);
-
-    if (currentFiltered.length === 0) {
-        noResults.style.display = 'block';
-        return;
-    }
-
-    resultsTitle.textContent = categoryLabels[cat] + ' › ' + sub;
-    resultsCount.textContent = currentFiltered.length.toLocaleString() + ' documentos';
-    resultsHeader.style.display = 'block';
-    resultsContainer.style.display = 'flex';
-    renderPage(1);
-});
-
-prevPageBtn.addEventListener('click', () => renderPage(currentPage - 1));
-nextPageBtn.addEventListener('click', () => renderPage(currentPage + 1));
-
-// Click en category card → selecciona categoría y despliega subcategorías
-document.querySelectorAll('.category-card').forEach(card => {
-    card.addEventListener('click', function() {
-        const cat = this.getAttribute('data-category');
-        mainCategorySelect.value = cat;
-        clearResults();
-        populateSubcategories(cat);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => subCategorySelect.focus(), 600);
-    });
-});
+prevPageBtn.addEventListener('click', () => { renderPage(currentPage - 1); resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+nextPageBtn.addEventListener('click', () => { renderPage(currentPage + 1); resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 
 // Modal
 const btnEnviarDocumento = document.getElementById('btnEnviarDocumento');
@@ -578,11 +523,9 @@ formEnvio.addEventListener('submit', async function(e) {
     const email = document.getElementById('inputEmail').value;
     if (!titulo || !categoria || !subcategoria || !email) { alert('Por favor, completa los campos requeridos'); return; }
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, timestamp: new Date().toISOString() } })
-        });
-        const result = await response.json();
+        const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, timestamp: new Date().toISOString() } }) });
+        const result = await r.json();
         if (result.success) { alert('¡Documento enviado!'); modalEnvio.style.display = 'none'; formEnvio.reset(); }
         else alert('Error: ' + (result.error || 'No se pudo enviar'));
     } catch { alert('Error al enviar. Intentá de nuevo.'); }
