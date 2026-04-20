@@ -406,14 +406,14 @@ function renderFeatured() {
     const catLabel = cat => categoryLabels[Object.keys(categoryMap).find(k => categoryMap[k] === cat)] || cat;
 
     const main = picks[0];
-    document.getElementById('featured-main-title').textContent = main.Titulo;
+    document.getElementById('featured-main-title').textContent = cleanTitle(main.Titulo);
     document.getElementById('featured-main-cat').textContent = catLabel(main.Categoria) + (main.Subcategoria ? ' · ' + main.Subcategoria : '');
     document.getElementById('featured-main').style.cursor = 'pointer';
     document.getElementById('featured-main').onclick = () => window.open('https://drive.google.com/file/d/' + main.DriveID + '/view', '_blank');
 
     document.getElementById('featured-sidebar').innerHTML = picks.slice(1).map(doc => `
         <a href="https://drive.google.com/file/d/${doc.DriveID}/view" target="_blank" class="featured-card" style="text-decoration:none; color:inherit;">
-            <h4>${doc.Titulo}</h4>
+            <h4>${cleanTitle(doc.Titulo)}</h4>
             <p>${catLabel(doc.Categoria)}${doc.Subcategoria ? ' · ' + doc.Subcategoria : ''}</p>
         </a>
     `).join('');
@@ -498,6 +498,16 @@ subcatChips.addEventListener('click', function(e) {
     setTimeout(() => resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 });
 
+function cleanTitle(name) {
+    return name
+        .replace(/^\._+/, '')                          // quita ._ del inicio
+        .replace(/\.[a-zA-Z0-9]{2,5}$/, '')           // quita extensión (.pdf, .docx, etc.)
+        .replace(/[_\-]+/g, ' ')                       // reemplaza _ y - por espacio
+        .replace(/\s+/g, ' ')                          // colapsa espacios múltiples
+        .trim()
+        .replace(/^./, c => c.toUpperCase());          // mayúscula inicial
+}
+
 function renderPage(page) {
     currentPage = page;
     const start = (page - 1) * PAGE_SIZE;
@@ -507,8 +517,8 @@ function renderPage(page) {
     resultsContainer.innerHTML = pageItems.map(doc => `
         <div class="doc-row">
             <div class="doc-row-info">
-                <h4>${doc['Titulo']}</h4>
-                <span>${doc['Autor'] || 'Sin autor'}</span>
+                <h4>${cleanTitle(doc['Titulo'])}</h4>
+                <span>${doc['Autor'] || ''}</span>
             </div>
             <a href="https://drive.google.com/file/d/${doc['DriveID']}/view" target="_blank" class="btn-get">Ver</a>
         </div>
