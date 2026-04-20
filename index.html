@@ -552,9 +552,10 @@ document.querySelectorAll('.category-card').forEach(card => {
     card.addEventListener('click', function() {
         const cat = this.getAttribute('data-category');
         mainCategorySelect.value = cat;
-        populateSubcategories(cat);
         clearResults();
-        document.querySelector('.search-hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        populateSubcategories(cat);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => subCategorySelect.focus(), 600);
     });
 });
 
