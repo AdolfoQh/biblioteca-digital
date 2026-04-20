@@ -615,10 +615,13 @@ formEnvio.addEventListener('submit', async function(e) {
     }
 
     try {
-        const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, archivoNombre, archivoBase64, timestamp: new Date().toISOString() } }) });
+        const r = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'uploadDocument', data: { titulo, autor, categoria, subcategoria, email, archivoNombre, archivoBase64, timestamp: new Date().toISOString() } })
+        });
         const result = await r.json();
-        if (result.success) { alert('¡Documento enviado!'); closeModal(); }
+        if (result.success) { alert('¡Documento enviado correctamente!'); closeModal(); }
         else alert('Error: ' + (result.error || 'No se pudo enviar'));
     } catch { alert('Error al enviar. Intentá de nuevo.'); }
 });
