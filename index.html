@@ -334,7 +334,7 @@
                     </div>
                 </div>
                 <input type="email" id="inputEmail" placeholder="Tu email" style="padding:0.7rem; border:1px solid #e5e5e5; border-radius:4px; font-family:Inter,sans-serif;">
-                <button type="submit" style="background:#1a1a1a; color:white; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Enviar para revisión</button>
+                <button type="submit" id="btnEnviar" style="background:#1a1a1a; color:white; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif; width:100%; font-size:0.9rem; font-weight:600; transition:opacity 0.2s;">Enviar para revisión</button>
                 <button type="button" id="btnCerrarModal" style="background:#f0f0f0; padding:0.8rem; border:none; border-radius:4px; cursor:pointer; font-family:Inter,sans-serif;">Cancelar</button>
             </form>
         </div>
@@ -614,6 +614,11 @@ formEnvio.addEventListener('submit', async function(e) {
         });
     }
 
+    const btn = document.getElementById('btnEnviar');
+    btn.disabled = true;
+    btn.textContent = '⏳ Enviando...';
+    btn.style.opacity = '0.6';
+
     try {
         const r = await fetch(API_URL, {
             method: 'POST',
@@ -624,6 +629,11 @@ formEnvio.addEventListener('submit', async function(e) {
         if (result.success) { alert('¡Documento enviado correctamente!'); closeModal(); }
         else alert('Error: ' + (result.message || result.error || 'No se pudo enviar'));
     } catch { alert('Error al enviar. Intentá de nuevo.'); }
+    finally {
+        btn.disabled = false;
+        btn.textContent = 'Enviar para revisión';
+        btn.style.opacity = '1';
+    }
 });
 </script>
 
