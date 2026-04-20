@@ -946,7 +946,7 @@ subCategorySelect.addEventListener('change', function() {
                 <h4>${doc['Titulo']}</h4>
                 <span>${doc['Autor'] || 'Sin autor'}</span>
             </div>
-            <button class="btn-get">Descargar</button>
+            <a href="https://drive.google.com/file/d/${doc['DriveID']}/view" target="_blank" class="btn-get">Descargar</a>
         </div>
     `).join('');
     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
