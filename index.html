@@ -56,6 +56,50 @@
         .hero h1 { font-size: 4rem; font-weight: 900; margin-bottom: 0.8rem; letter-spacing: -1.5px; line-height: 1.1; }
         .hero p { font-size: 1.1rem; color: #666; font-weight: 400; max-width: 500px; line-height: 1.6; }
 
+        /* SEARCH */
+        .search-wrap { margin-top: 2rem; position: relative; max-width: 640px; }
+        .search-input {
+            width: 100%; padding: 1rem 1.2rem 1rem 3rem;
+            font-size: 1rem; font-family: 'Inter', sans-serif;
+            border: 2px solid #1a1a1a; border-radius: 6px;
+            outline: none; transition: box-shadow 0.2s;
+            background: #fff;
+        }
+        .search-input:focus { box-shadow: 0 0 0 3px rgba(26,26,26,0.12); }
+        .search-icon {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            color: #999; font-size: 1rem; pointer-events: none;
+        }
+        .search-clear {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: #999;
+            font-size: 1.1rem; display: none; padding: 0;
+        }
+        .search-results {
+            margin-top: 0.5rem; background: #fff; border: 1px solid #e8e8e8;
+            border-radius: 6px; max-height: 420px; overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .search-result-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.85rem 1.1rem; border-bottom: 1px solid #f0f0f0;
+            gap: 1rem;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: #fafafa; }
+        .search-result-info { flex: 1; min-width: 0; }
+        .search-result-title { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-result-meta { font-size: 0.75rem; color: #999; margin-top: 2px; }
+        .search-result-btn {
+            background: #1a1a1a; color: white; border: none; padding: 0.4rem 0.9rem;
+            border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; white-space: nowrap; flex-shrink: 0;
+        }
+        .search-result-btn:hover { background: #333; }
+        .search-count { padding: 0.6rem 1.1rem; font-size: 0.78rem; color: #999; border-bottom: 1px solid #f0f0f0; }
+        .search-empty { padding: 1.5rem 1.1rem; text-align: center; color: #999; font-size: 0.9rem; }
+
         /* MAIN CONTENT */
         .container { max-width: 1200px; margin: 0 auto; padding: 4rem 3rem; }
         .section-title { font-size: 2rem; font-weight: 900; margin-bottom: 2rem; letter-spacing: -0.5px; }
@@ -229,6 +273,12 @@
 <section class="hero">
     <h1>Recursos para diseñadores e investigadores</h1>
     <p>Documentos sobre diseño, tecnología y educación</p>
+    <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar documentos..." autocomplete="off">
+        <button class="search-clear" id="searchClear">✕</button>
+        <div class="search-results" id="searchResults"></div>
+    </div>
 </section>
 
 <div class="container">
@@ -639,6 +689,63 @@ formEnvio.addEventListener('submit', async function(e) {
         btn.style.opacity = '1';
     }
 });
+
+// ── BUSCADOR ──────────────────────────────────────────────
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const searchClear = document.getElementById('searchClear');
+
+searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim();
+    searchClear.style.display = q ? 'block' : 'none';
+    if (q.length < 2) { searchResults.style.display = 'none'; return; }
+    runSearch(q);
+});
+
+searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClear.style.display = 'none';
+    searchResults.style.display = 'none';
+    searchInput.focus();
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) searchResults.style.display = 'none';
+});
+searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim().length >= 2) searchResults.style.display = 'block';
+});
+
+function runSearch(q) {
+    const terms = q.toLowerCase().normalize('NFC').split(/\s+/).filter(Boolean);
+    const matches = allDocuments.filter(doc => {
+        const haystack = (cleanTitle(doc.Titulo) + ' ' + (doc.Autor || '')).toLowerCase().normalize('NFC');
+        return terms.every(t => haystack.includes(t));
+    }).slice(0, 40);
+
+    if (matches.length === 0) {
+        searchResults.innerHTML = '<div class="search-empty">No se encontraron documentos</div>';
+    } else {
+        const catLabel = doc => {
+            const c = doc.Categoria || '';
+            const s = doc.Subcategoria || '';
+            return [c.replace(/^\d+_/, '').replace(/_/g,' '), s].filter(Boolean).join(' · ');
+        };
+        searchResults.innerHTML =
+            `<div class="search-count">${matches.length === 40 ? 'Más de 40' : matches.length} resultado${matches.length !== 1 ? 's' : ''}</div>` +
+            matches.map(doc => `
+                <div class="search-result-item">
+                    <div class="search-result-info">
+                        <div class="search-result-title">${cleanTitle(doc.Titulo)}</div>
+                        <div class="search-result-meta">${catLabel(doc)}</div>
+                    </div>
+                    ${doc.DriveID
+                        ? `<button class="search-result-btn" onclick="window.open('https://drive.google.com/file/d/${doc.DriveID}/view','_blank')">VER</button>`
+                        : ''}
+                </div>`).join('');
+    }
+    searchResults.style.display = 'block';
+}
 </script>
 
 </body>
